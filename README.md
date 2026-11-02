@@ -50,6 +50,8 @@ js/data.js        5 modul g1–g5 + KUIS_AKHIR (geo-final)
 js/siswa.js       praktik isian + kanvas + gerbang + kuis berwaktu
 js/guru.js        analitik, CSV, realtime, materi & kunci
 sql/schema.sql    skema Supabase (jalankan 1× di SQL Editor proyek)
+.opencode/skills/ skill OpenCode "buat-lkpd" (panduan & validasi)
+PROMPT-TEMPLATE-LKPD-NONKODING.md   master prompt untuk LKPD non-koding baru
 ```
 
 ## Format praktik non-koding (untuk penulis LKPD berikutnya)
@@ -72,3 +74,16 @@ praktik: {
 ```
 
 Painter `js/siswa.js` menggambar `vis.kurva` (garis/kurva asal) pada semua jenis visual, plus `vis.kurvaBay` (garis bayangan y = m·x + c yang mengikuti isian siswa, untuk 📤 Kirim dinilai via `checks` angkanya). Untuk materi yang butuh tampilan baru, tambahkan painter di `renderVisual()` / `js/siswa.js`. Kuis akhir: 4 soal per modul (awali teks soal dengan `<JudulModul> — `).
+
+## Gunakan ulang pola ini untuk LKPD berikutnya
+
+- **Skill OpenCode** — `.opencode/skills/buat-lkpd/` di repo ini: workflow lengkap
+  (parameter, kerangka 10 file, format data.js + aturan konsistensi, kanvas,
+  validasi, Supabase, deploy) plus skrip validasi siap pakai di `references/`.
+  Terdaftar untuk repo ini secara otomatis; salin folder itu ke
+  `~/.config/opencode/skills/` agar tersedia di semua proyek.
+- **Template prompt** — `PROMPT-TEMPLATE-LKPD-NONKODING.md`: master prompt di
+  atas (berbasis proyek ini, konten `[di dalam kurung siku]`) untuk dipakai ke
+  AI mana pun (termasuk di luar OpenCode).
+- Proyek contoh lain (koding/Pyodide) memakai template `PROMPT-TEMPLATE-LKPD.md`
+  di repo induk `lkpdarraypython`.
