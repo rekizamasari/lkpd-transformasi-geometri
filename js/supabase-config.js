@@ -5,17 +5,17 @@
  *   2. Menu "Settings" → "API"
  *   3. Salin "Project URL" dan "anon public key" ke sini
  * ===================================================================== */
-const SUPABASE_URL = "https://bgxzarmkpwhiweovbsyh.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJneHphcm1rcHdoaXdlb3Zic3loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NDI1MjMsImV4cCI6MjEwOTExODUyM30.bRseqAFNO-cXE7MsJ1Lb8DGRnL7Zw9fV3nYHIFVqA08";
+const SUPABASE_URL = "https://yyiywofgghmldbxtajbh.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5aXl3b2ZnZ2htbGRieHRhamJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1NzExMjQsImV4cCI6MjEwOTE0NzEyNH0.t4fkWQOmwebm6UyrdnwvBr0zuJ8eRWHjX9DiqfBeBtg";
 
 // ---------------------------------------------------------------------------
 // Profil guru default yang dibuat via SQL (lihat README bagian 6).
 // ---------------------------------------------------------------------------
 const CONFIG = {
   app: {
-    namaApp: "LKPD Interaktif — Array & Rekursif",
-    mapel: "Koding dan Kecerdasan Artifisial",
-    kelas: "X",
+    namaApp: "LKPD Interaktif — Transformasi Geometri",
+    mapel: "Matematika",
+    kelas: "XI",
     satuanPenilaian: "SPSS", // skor sementara (0-100), dipakai guru saat input rapor
   },
 };

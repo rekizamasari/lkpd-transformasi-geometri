@@ -16,15 +16,19 @@ Setiap modul juga membahas **penerapan transformasi pada persamaan garis & kurva
 
 Kuis terpadu: **20 soal acak (4 dari tiap modul, termasuk 1 soal garis/kurva), 20 menit** (`geo-final`), terbuka setelah kelima modul tuntas.
 
-## Setup (guru)
+## Setup database (guru) — proyek Supabase mandiri
 
-1. **Supabase** — memakai proyek Supabase yang **sama** dengan LKPD Array (URL + anon key sudah terisi di `js/supabase-config.js`). Skema database tetap `sql/schema.sql` di repo induk.
-   > Bila memakai proyek Supabase baru/terpisah, jalankan sekali `sql/schema.sql` (di repo induk) di SQL Editor → Table Editor, dan pastikan **Authentication → Email → "Confirm email" = OFF**.
-2. **Akun guru** — daftar lewat Supabase Dashboard (Authentication → Users → Add user, Auto Confirm), lalu di SQL Editor:
+Repo ini memakai **proyek Supabase sendiri** (terpisah dari LKPD Array). Skema DB ada di repo ini: `sql/schema.sql`.
+
+1. **Buat proyek Supabase** baru di https://supabase.com (gratis). Salin **Project URL** dan **anon public key** dari *Settings → API*, lalu isi ke `js/supabase-config.js`.
+2. **Nonaktifkan konfirmasi email** di proyek baru: *Authentication → Sign In / Providers → Email* → matikan **"Confirm email"**. (Tanpa ini siswa tidak bisa login setelah daftar.)
+3. **Jalankan skema**: *SQL Editor → paste seluruh isi `sql/schema.sql` → Run*. Skrip ini idempotent (aman diulang).
+4. **Kelola kelas**: edit bagian `SEED` di `sql/schema.sql` sebelum dijalankan (nama kelas XI kamu), atau tambah/ubah lewat *Table Editor → kelas* kapan saja (tombol ➕ Tambah Kelas di dashboard guru juga bisa).
+5. **Akun guru** — daftarkan lewat Supabase Dashboard (*Authentication → Users → Add user*, Auto Confirm) dengan email + password guru, lalu di SQL Editor:
    ```sql
-   update public.profiles set role='guru' where id='<UUID>';
+   update public.profiles set role='guru' where id='<UUID user tersebut>';
    ```
-3. **GitHub Pages** — repo ini di-deploy sendiri; URL:
+6. **GitHub Pages** — repo ini di-deploy sendiri; URL:
    `https://<username>.github.io/lkpd-transformasi-geometri/`   (aktif untuk repo ini: `https://rekizamasari.github.io/lkpd-transformasi-geometri/`)
 
 ## Cara pakai siswa
@@ -45,6 +49,7 @@ js/auth.js        login/session + mapper NISN→email
 js/data.js        5 modul g1–g5 + KUIS_AKHIR (geo-final)
 js/siswa.js       praktik isian + kanvas + gerbang + kuis berwaktu
 js/guru.js        analitik, CSV, realtime, materi & kunci
+sql/schema.sql    skema Supabase (jalankan 1× di SQL Editor proyek)
 ```
 
 ## Format praktik non-koding (untuk penulis LKPD berikutnya)
