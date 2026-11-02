@@ -66,8 +66,16 @@ create index if not exists idx_quiz_student    on public.quiz_results(student_id
 -- via dashboard). Guru boleh punya NIS kosong → NULL tidak dianggap duplikat.
 do $$
 begin
-  alter table public.profiles add constraint profiles_nis_unique unique (nis);
-exception when duplicate_object then null; -- sudah ada, abaikan
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'profiles_nis_unique'
+      and conrelid = 'public.profiles'::regclass
+  ) then
+    alter table public.profiles add constraint profiles_nis_unique unique (nis);
+  end if;
+exception
+  when duplicate_table then null;  -- sudah ada, abaikan
+  when duplicate_object then null; -- sudah ada, abaikan
 end $$;
 
 -- =====================================================================
