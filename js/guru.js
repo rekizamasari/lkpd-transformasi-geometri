@@ -53,7 +53,7 @@ $g("btn-csv").onclick = unduhCSV;
 /* ---------- TAB MATERI & KUNCI ---------- */
 $g("materi-pilih").innerHTML =
   MODUL.map(m => `<option value="${m.id}">Modul ${m.nomor} — ${m.judul}</option>`).join("") +
-  `<option value="${FINAL_ID}">🏁 Kuis Akhir (20 soal) + kunci</option>`;
+  `<option value="${FINAL_ID}">🏁 Kuis Akhir (${KUIS_AKHIR.soal.length} soal) + kunci</option>`;
 $g("materi-pilih").onchange = () => renderMateri($g("materi-pilih").value);
 renderMateri(MODUL[0].id);
 
@@ -71,10 +71,10 @@ function renderMateri(mid) {
       <div class="lec-panel">
         <h4>🏁 Kuis Akhir — Ujian Terpadu</h4>
         <ul>
-          <li><b>${KUIS_AKHIR.soal.length} soal</b> mencampur Modul 1–5.</li>
+          <li><b>${KUIS_AKHIR.soal.length} soal</b> mencampur Modul 1–${MODUL.length}.</li>
           <li>Durasi <b>${KUIS_AKHIR.durasiMenit} menit</b>, hitung mundur; auto-kirim saat habis.</li>
           <li>Urutan soal <b>diacak</b> setiap siswa memulai.</li>
-          <li>Terbuka hanya jika <b>kelima modul</b> terkirim praktik + kuisnya.</li>
+          <li>Terbuka hanya jika <b>semua modul</b> terkirim praktik + kuisnya.</li>
           <li>Jawaban kunci ditandai ✅ hijau di daftar soal di bawah.</li>
         </ul>
       </div>

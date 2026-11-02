@@ -11,8 +11,10 @@ Repo mandiri — contoh penerapan dari template `PROMPT-TEMPLATE-LKPD.md` yang a
 | 3 🔄 | Rotasi — 90°/180°/270°, searah & berlawanan jarum jam |
 | 4 🔍 | Dilatasi — faktor k, luas ×k², sifat invarian pusat |
 | 5 🧩 | Komposisi transformasi — (T ∘ R), urutan penting, studi kasus batik & animasi |
+| 6 📈 | Transformasi Fungsi (Translasi & Refleksi) — y = f(x−a)+b, y = −f(x), y = f(−x) |
+| 7 🎚️ | Transformasi Fungsi (Dilatasi & Komposisi) — y = k·f(x), y = f(kx), y = a(x−b)²+c |
 
-Kuis terpadu: **20 soal acak, 20 menit** (`geo-final`), terbuka setelah kelima modul tuntas.
+Kuis terpadu: **21 soal acak (3 dari tiap modul), 20 menit** (`geo-final`), terbuka setelah semua modul tuntas.
 
 ## Setup (guru)
 
@@ -51,11 +53,14 @@ js/guru.js        analitik, CSV, realtime, materi & kunci
 praktik: {
   deskripsi: "…",
   inputs: `<div class="input-row">…<input id="m-a-x" type="number" />…</div>`, // HTML form
-  visual: { jenis: "vektor|refleksi|rotasi|dilatasi|komposisi", … },
+  // Untuk materi "transformasi fungsi":
+  //   visual: { jenis:"fungsi", kurva:[{expr:"x*x",warna,label},…], titik:[…] }
+  //   expr dikembalikan lewat new Function("x", …) oleh painter js/siswa.js
+  visual: { jenis: "vektor|refleksi|rotasi|dilatasi|komposisi|fungsi", … },
   checks: [
     { poin: 25, desc: "…", type: "angka", sel: "#m-a-x", val: 5 },     // |isi−val| ≤ 0.01
     { poin: 25, desc: "…", type: "teks",  sel: "#m-sel", val: "regex" } // regex (i)
   ]
 }
 ```
-Tambahkan `jenis` visual baru di `renderVisual()` / painter di `js/siswa.js` bila materi butuh tampilan lain.
+Painter `jenis:"fungsi"` menggambar kurva dasar + kurva hasil transformasi + legenda di kanvas −8..8; tambahkan bentuk visual lain dalam `renderVisual()` / painter `js/siswa.js` bila materi butuh tampilan baru. Kuis akhir: 3 soal per modul (awali teks soal dengan `<JudulModul> — `).

@@ -19,7 +19,7 @@ const FINAL_ID = KUIS_AKHIR.id;   // "geo-final" — id kuis akhir LKPD ini
   $("profil-kelas").textContent = "🏫 Kelas " + (profil?.kelas?.nama || "-");
   $("salam").innerHTML = `<div class="lec-panel" style="border-left:4px solid var(--aqua)">
     <h4>Selamat datang, ${profil?.nama || "Siswa"}! 👋</h4>
-    <p class="muted">Selesaikan 5 modul di bawah. Setiap modul berisi: <b>materi → contoh langkah → praktik isian koordinat (dinilai otomatis) → kuis</b>.
+    <p class="muted">Selesaikan ${MODUL.length} modul di bawah. Setiap modul berisi: <b>materi → contoh langkah → praktik isian koordinat (dinilai otomatis) → kuis</b>.
     Gunakan tombol <b>👁️ Lihat Visual</b> untuk melihat hasil transformasimu pada kanvas. Nilainya langsung masuk ke dashboard guru.</p></div>`;
   await muatProgres();
   renderModul();
@@ -133,10 +133,10 @@ function renderKartuFinal() {
   }).join(" ");
   return `<div class="modul-card" ${siap ? 'onclick="bukaFinal()"' : ''} style="${siap ? "border-color:var(--kuning);" : "opacity:.55;cursor:not-allowed"}">
     <span class="modul-num" style="color:var(--kuning)">🏁 KUIS AKHIR (TERBUKA JIKA SEMUA MODUL SELESAI)</span>
-    <h3>🧩 Ujian Terpadu — 20 Soal</h3>
+    <h3>🧩 Ujian Terpadu — ${KUIS_AKHIR.soal.length} Soal</h3>
     <p class="muted" style="font-size:.85rem">${siap
       ? `Terbuka! ${KUIS_AKHIR.durasiMenit} menit · urutan soal diacak · auto-kirim saat waktu habis · nilai terbaik: ${nf ? nf.kuis ?? "-" : "-"}`
-      : "Selesaikan praktik + kuis di kelima modul untuk membukanya. Ceklis:"}</p>
+      : "Selesaikan praktik + kuis di semua modul untuk membukanya. Ceklis:"}</p>
     <span class="nilai-badge" ${siap ? 'style="display:none"' : ""}>${checklist}</span>
   </div>`;
 }
@@ -148,7 +148,7 @@ window.bukaFinal = () => {
   <div class="lec-panel">
     <h4>📖 Aturan Kuis Akhir</h4>
     <ul>
-      <li><b>${KUIS_AKHIR.soal.length} soal</b> mencampur semua materi (translasi, refleksi, rotasi, dilatasi, komposisi).</li>
+      <li><b>${KUIS_AKHIR.soal.length} soal</b> mencampur semua materi — transformasi titik (translasi, refleksi, rotasi, dilatasi, komposisi) dan transformasi fungsi (geser, cermin, membesarkan grafik).</li>
       <li>Dibatasi waktu <b>${KUIS_AKHIR.durasiMenit} menit</b>; hitung mundur tampil di bagian atas.</li>
       <li><b>Urutan soal diacak</b> setiap kali memulai.</li>
       <li>Saat waktu habis, jawaban <b>otomatis dikirim</b>.</li>
@@ -495,6 +495,7 @@ function gambarKanvas(ctx, vis, S) {
     case "rotasi": gambarBayangan(ctx, vis, px, py); break;
     case "dilatasi": gambarBayangan(ctx, vis, px, py, true); break;
     case "komposisi": gambarKomposisi(ctx, vis, px, py); break;
+    case "fungsi": gambarFungsi(ctx, vis, px, py, u); break;
   }
 }
 
@@ -597,6 +598,52 @@ function gambarKomposisi(ctx, vis, px, py) {
   ctx.fillText("● titik asal", 10, 20);
   ctx.fillStyle = "#a78bfa"; ctx.fillText("● tahap 1", 10, 38);
   ctx.fillStyle = "#22d3ee"; ctx.fillText("● hasil akhir (dari isianmu)", 10, 56);
+}
+
+/* ---------- PAINTER FUNGSI · CURVE ----------
+   vis = {
+     kurva: [ { expr:"x*x", warna:"#fb923c", label:"y = x²" }, … ],
+     titik: [ { asal:[0,0], labelAsal:"puncak lama", label:"puncak baru",
+                sel:["#g6-puncak-x","#g6-puncak-y"] }, … ]   (opsional)
+   } */
+function gambarFungsi(ctx, vis, px, py, u) {
+  const x0 = -8.5, x1 = 8.5;
+
+  // kurva-kurva (dasar & hasil transformasi)
+  (vis.kurva || []).forEach(k => {
+    let f = null;
+    try { f = new Function("x", "return (" + k.expr + ")"); } catch { f = null; }
+    if (!f) return;
+    ctx.strokeStyle = k.warna; ctx.lineWidth = 2.5;
+    let baru = true;
+    for (let X = x0; X <= x1 + 1e-9; X += 0.04) {
+      const Y = f(X);
+      if (!isFinite(Y) || Y < -9 || Y > 9) { baru = true; continue; }
+      const cx = px(X), cy = py(Y);
+      if (baru) { ctx.beginPath(); ctx.moveTo(cx, cy); baru = false; }
+      else ctx.lineTo(cx, cy);
+    }
+    ctx.stroke();
+  });
+
+  // legenda
+  let ly = 20;
+  (vis.kurva || []).forEach(k => {
+    ctx.fillStyle = k.warna; ctx.font = "bold 12px Consolas"; ctx.textAlign = "left";
+    ctx.fillText("—  " + (k.label || k.expr), 10, ly);
+    ly += 17;
+  });
+
+  // titik acuan: asal tetap + bayangan dari isian siswa (puncak dsb.)
+  (vis.titik || []).forEach(t => {
+    const asalPx = [px(t.asal[0]), py(t.asal[1])];
+    titik(ctx, asalPx, "#fb923c", t.labelAsal || "");
+    const bay = t.sel ? bacaTitik(t.sel) : null;
+    if (bay) {
+      garisPanahDashed(ctx, asalPx, [px(bay[0]), py(bay[1])], "#a78bfa");
+      titik(ctx, [px(bay[0]), py(bay[1])], "#a78bfa", t.label || "");
+    }
+  });
 }
 
 /* ---------- HASIL KUIS ---------- */

@@ -353,10 +353,159 @@ k  = 0     → seluruh titik jatuh ke pusat (bangun menyusut jadi satu titik)</p
     { q: "Dalam animasi grafis, manfaat komposisi transformasi adalah…", opsi: ["membuat animasi lebih lambat", "menggambar bentuk rumit dari kombinasi gerakan sederhana (geser, putar, besarkan)", "menghilangkan data", "mengganti warna otomatis"], kunci: 1 },
   ],
 },
+
+/* ================= G6: TRANSFORMASI FUNGSI — TRANSLASI & REFLEKSI ================= */
+{
+  id: "g6",
+  nomor: 6,
+  judul: "Transformasi Fungsi — Translasi & Refleksi",
+  ikon: "📈",
+  ringkas: "Geser & cermin grafik fungsi: f(x−a)+b, −f(x), f(−x).",
+  tujuan: [
+    "Menentukan persamaan hasil translasi fungsi: y = f(x − a) + b.",
+    "Menentukan persamaan hasil refleksi fungsi: y = −f(x) (sumbu X) dan y = f(−x) (sumbu Y).",
+    "Menghubungkan transformasi titik dengan transformasi grafik fungsi.",
+  ],
+  teori: `
+<p>Transformasi yang dipelajari untuk <b>titik</b> juga berlaku untuk <b>grafik fungsi</b>: setiap titik <code>(x, y)</code> pada grafik <code>y = f(x)</code> ikut dipetakan, dan hasilnya adalah fungsi baru <code>g(x)</code>.</p>
+<h4>Aturan pada persamaan fungsi</h4>
+<pre>Translasi   T(a, b) : y = f(x)  →  g(x) = f(x − a) + b
+Refleksi sumbu X     : y = f(x)  →  g(x) = −f(x)
+Refleksi sumbu Y     : y = f(x)  →  g(x) = f(−x)</pre>
+<h4>Contoh pada f(x) = x²</h4>
+<pre>T(2, 3)      : g(x) = (x − 2)² + 3   →  puncak (0,0) bergeser ke (2,3)
+Refleksi s.X : h(x)  = −x²           →  parabola terbalik
+Refleksi s.Y : p(x)  = (−x)² = x²    →  kembali sama (karena simetri)</pre>
+<div class="info-box merah">🔴 <b>Jebakan paling sering:</b> <code>y = f(x − 2)</code> menggeser grafik ke <b>KANAN</b> 2 (bukan ke kiri!). Mengapa? Agar isinya bernilai sama, <code>x</code> harus 2 lebih besar.</div>
+<div class="info-box kuning">⚠️ <b>Jangan tertukar:</b> <code>y = −f(x)</code> membalik <b>atas–bawah</b> (cermin sumbu X); <code>y = f(−x)</code> membalik <b>kiri–kanan</b> (cermin sumbu Y).</div>
+<div class="info-box hijau">💡 <b>Tips menguji:</b> ambil satu titik kunci (contoh: puncak), transformasikan sebagai <i>titik</i> biasa, lalu cocokkan dengan grafik fungsi barunya.</div>`,
+  langkah: [
+    { judul: "Translasi vertikal: y = f(x) + b", penjelasan: "b positif = grafik naik; b negatif = turun. Nilai setiap titik ditambah b.", kode:
+"f(x) = x²,   b = 3\ng(x) = x² + 3\nx=0: 0 → 3\nx=1: 1 → 4\nx=2: 4 → 7\nPuncak: (0,0) → (0,3)" },
+    { judul: "Translasi horizontal: y = f(x − a)", penjelasan: "a positif = geser KANAN; a negatif = KIRI (ingat jebakan!)", kode:
+"f(x) = x²,   a = 2\ng(x) = (x − 2)²\nx=2: 0 → 0\nx=3: 1 → 1\nx=4: 4 → 4\nPuncak: (0,0) → (2,0)" },
+    { judul: "Translasi gabungan", penjelasan: "Kembangkan bersama: g(x) = f(x − a) + b.", kode:
+"f(x) = x²,   T(a, b) = T(2, 3)\ng(x) = (x − 2)² + 3\nPuncak: (0,0) → (2,3)\ng(0)  = (0−2)² + 3 = 7" },
+    { judul: "Refleksi: y = −f(x) dan y = f(−x)", penjelasan: "Tanda minus di DEPAN f → balik atas-bawah; DI DALAM f → balik kiri-kanan.", kode:
+"h(x) = −x²     : h(2) = −4   (cermin sumbu X)\np(x) = (−x)² = x² : p(2) = 4 (cermin sumbu Y; nilainya sama — simetri)" },
+  ],
+  praktik: {
+    deskripsi: `<b>Misi praktik:</b> berlaku pada <code>f(x) = x²</code>. Tekan 👁️ <b>Lihat Visual</b> untuk melihat grafik dasar, hasil translasi <code>T(2, 3)</code>, dan hasil refleksi sumbu X pada kanvas. Lalu hitung &amp; isi: puncak <code>g(x) = (x−2)² + 3</code>, nilai <code>g(0)</code>, nilai <code>h(2)</code> untuk <code>h(x) = −x²</code>, dan jawab pertanyaan konsep; terakhir 📤 <b>Kirim</b>.
+<div class="info-box hijau">💡 Uji jawabanmu dengan cara: ambil titik puncak lama <code>(0, 0)</code>, geser sejauh <code>T(2, 3)</code> → harus cocok dengan puncak baru yang kamu tulis.</div>`,
+    inputs: `
+  <div class="input-row">
+    <label>Puncak g(x) = (x−2)² + 3 = ( <input id="g6-puncak-x" type="number" step="any" style="width:80px" /> , <input id="g6-puncak-y" type="number" step="any" style="width:80px" /> )</label>
+    <label>Nilai g(0) = <input id="g6-g0" type="number" step="any" style="width:80px" /></label>
+  </div>
+  <div class="input-row">
+    <label>Nilai h(2) untuk h(x) = −x² = <input id="g6-h2" type="number" step="any" style="width:80px" /></label>
+    <label>Grafik <code>y = f(x − 2)</code> bergeser ke…
+      <select id="g6-konsep"><option value="">— pilih —</option><option>Kanan sejauh 2</option><option>Kiri sejauh 2</option><option>Naik sejauh 2</option><option>Turun sejauh 2</option></select></label>
+  </div>`,
+    visual: {
+      jenis: "fungsi",
+      kurva: [
+        { expr: "x*x",             warna: "#fb923c", label: "dasar: y = x²" },
+        { expr: "(x-2)*(x-2)+3",   warna: "#22d3ee", label: "g(x) = (x−2)² + 3 (translasi)" },
+        { expr: "-x*x",            warna: "#f472b6", label: "h(x) = −x² (refleksi s.X)" },
+      ],
+      titik: [ { labelAsal: "puncak lama", label: "puncak baru", asal: [0, 0], sel: ["#g6-puncak-x", "#g6-puncak-y"] } ],
+    },
+    checks: [
+      { poin: 25, desc: "Absis puncak g(x) = (x−2)² + 3 benar: x = 2",         type: "angka", sel: "#g6-puncak-x", val: 2 },
+      { poin: 25, desc: "g(0) = 7",                                            type: "angka", sel: "#g6-g0", val: 7 },
+      { poin: 25, desc: "h(2) = −4 (refleksi sumbu X)",                        type: "angka", sel: "#g6-h2", val: -4 },
+      { poin: 25, desc: "Konsep: y = f(x−2) bergeser kanan sejauh 2",          type: "teks",  sel: "#g6-konsep", val: "Kanan sejauh 2" },
+    ],
+  },
+  kuis: [
+    { q: "Grafik <code>y = f(x)</code> digeser <b>3 satuan ke atas</b>; persamaan barunya adalah…", opsi: ["y = f(x) + 3", "y = f(x + 3)", "y = f(x) − 3", "y = 3·f(x)"], kunci: 0 },
+    { q: "Grafik <code>y = x²</code> bergeser <b>2 satuan ke kanan</b>; persamaannya…", opsi: ["y = (x − 2)²", "y = (x + 2)²", "y = x² − 2", "y = x² + 2"], kunci: 0 },
+    { q: "Menggeser grafik <code>y = f(x)</code> dengan <code>T = (a, b)</code> menghasilkan…", opsi: ["y = f(x − a) + b", "y = f(x + a) + b", "y = f(x)·a + b", "y = f(x − b) + a"], kunci: 0 },
+    { q: "Grafik <code>f(x) = x²</code> direfleksikan terhadap <b>sumbu X</b>; bayangannya…", opsi: ["y = −x²", "y = (−x)²", "y = x", "y = x² + 1"], kunci: 0 },
+    { q: "Grafik <code>f(x) = x²</code> direfleksikan terhadap <b>sumbu Y</b>; bayangannya…", opsi: ["y = x²", "y = −x²", "y = −x", "y = x² + 1"], kunci: 0 },
+    { q: "Tiga titik pada <code>y = x²</code>: (−1, 1), (0, 0), (2, 4) digeser <code>T = (−2, 0)</code>. Bayangannya adalah…", opsi: ["(−3, 1), (−2, 0), (0, 4)", "(1, 1), (2, 0), (4, 4)", "(−1, −1), (0, 0), (2, −4)", "(−3, 3), (−2, 2), (0, 6)"], kunci: 0 },
+  ],
+},
+
+/* ================= G7: TRANSFORMASI FUNGSI — DILATASI & KOMPOSISI ================= */
+{
+  id: "g7",
+  nomor: 7,
+  judul: "Transformasi Fungsi — Dilatasi & Komposisi",
+  ikon: "🎚️",
+  ringkas: "Membesar/mengecilkan grafik fungsi: k·f(x), f(kx), gabungan.",
+  tujuan: [
+    "Menentukan persamaan hasil dilatasi fungsi: y = k·f(x) dan y = f(k·x).",
+    "Menentukan persamaan hasil transformasi gabungan pada fungsi.",
+    "Menghitung nilai fungsi hasil transformasi pada x tertentu.",
+  ],
+  teori: `
+<p><b>Dilatasi</b> membesarkan/mengecilkan grafik. Setiap titik <code>(x, y)</code> pada <code>y = f(x)</code> dipetakan:</p>
+<pre>Dilatasi vertikal (faktor k)  : (x, y) → (x, k·y)   ≡    y = k·f(x)
+Dilatasi horizontal (faktor k): (x, y) → (k·x, y)   ≡    y = f(x/k)
+Keduanya sekaligus, D[O, k]   : (x, y) → (k·x, k·y) ≡    y = k·f(x/k)</pre>
+<h4>Contoh pada f(x) = x²</h4>
+<pre>Vertikal k = 2     : g(x) = 2x²          (x=2: 4 → 8, grafik lebih curam)
+Horizontal, g=f(2x): g(x) = (2x)² = 4x²  (grafik memampat, menyempit)
+Penuh D[O, 2]      : g(x) = 2·(x/2)² = x²/2</pre>
+<h4>Transformasi berantai (komposisi)</h4>
+<pre>Refleksi s.X lalu T(0, 4) :  x² → −x² → −x² + 4   (puncak (0,0) → (0,4))
+Gabungan umum             :  y = a·(x − b)² + c</pre>
+<div class="info-box merah">🔴 <b>Jebakan:</b> <code>y = k·f(x)</code> ≠ <code>y = f(k·x)</code>! Yang pertama merenggangkan/MENBESARKAN secara <b>vertikal</b>; yang kedua memampatkan secara <b>horizontal</b>.</div>
+<div class="info-box hijau">💡 <b>Cara aman:</b> transformasikan nilai fungsi titik demi titik — ambil <code>x</code>, hitung <code>y = f(x)</code>, lalu gunakan aturan pemetaan pada <code>(x, y)</code>.</div>`,
+  langkah: [
+    { judul: "Dilatasi vertikal: y = k·f(x)", penjelasan: "Semua nilai fungsi dikali k; grafik melebar vertikal (k>1) atau menyusut (0<k<1).", kode:
+"f(x) = x²,   k = 2\ng(x) = 2x²\nx=1: 1 → 2\nx=2: 4 → 8" },
+    { judul: "Dilatasi horizontal: y = f(k·x)", penjelasan: "Masukan (input) dikali k; grafik memampat horizontal untuk k>1.", kode:
+"f(x) = x²,   g(x) = f(2x) = (2x)² = 4x²\ng(1) = 4  =  f(2)   →  nilai x=2 muncul pada x=1" },
+    { judul: "Refleksi lalu translasi", penjelasan: "Kerjakan berurutan pada bentuk fungsi.", kode:
+"f(x) = x²\nRefleksi s.X : −x²\nT(0, 4)      : −x² + 4\nPuncak: (0,0) → (0,4)" },
+    { judul: "Transformasi gabungan: y = a(x−b)² + c", penjelasan: "a = faktor vertikal, b = geser horizontal, c = geser vertikal.", kode:
+"f(x) = x²\ng(x) = 2(x − 1)² − 3 = 2·f(x−1) − 3\n→ faktor vertikal 2, geser kanan 1, turun 3\nPuncak: (1, −3)\ng(0) = −1,   g(3) = 5" },
+  ],
+  praktik: {
+    deskripsi: `<b>Misi praktik:</b> masih pada <code>f(x) = x²</code>. Tekan 👁️ untuk melihat grafik dasar <code>x²</code>, hasil <code>g(x) = 2(x−1)² − 3</code>, dan hasil dilatasi horizontal <code>h(x) = 4x²</code>. Hitung &amp; isi nilai-nilai berikut, jawab pertanyaan konsep, lalu 📤 <b>Kirim</b>.
+<div class="info-box hijau">💡 Cara aman: substitusikan x ke rumus — mis. <code>g(0) = 2(0−1)² − 3</code>.</div>`,
+    inputs: `
+  <div class="input-row">
+    <label>g(x) = 2(x−1)² − 3 → g(0) = <input id="g7-g0" type="number" step="any" style="width:80px" /></label>
+    <label>g(3) = <input id="g7-g3" type="number" step="any" style="width:80px" /></label>
+  </div>
+  <div class="input-row">
+    <label>h(x) = f(2x) → h(1) = <input id="g7-h1" type="number" step="any" style="width:80px" /></label>
+    <label><code>y = 2·f(x)</code> berarti grafik…
+      <select id="g7-konsep"><option value="">— pilih —</option><option>Membesar vertikal 2× (lebih tinggi/curam)</option><option>Membesar horizontal 2× (lebih landai)</option><option>Terbalik terhadap sumbu X</option><option>Tetap sama</option></select></label>
+  </div>`,
+    visual: {
+      jenis: "fungsi",
+      kurva: [
+        { expr: "x*x",               warna: "#fb923c", label: "dasar: y = x²" },
+        { expr: "2*(x-1)*(x-1)-3",   warna: "#22d3ee", label: "g(x) = 2(x−1)² − 3" },
+        { expr: "4*x*x",             warna: "#a78bfa", label: "h(x) = 4x² = f(2x)" },
+      ],
+    },
+    checks: [
+      { poin: 25, desc: "g(0) = 2(0−1)² − 3 = −1",                        type: "angka", sel: "#g7-g0", val: -1 },
+      { poin: 25, desc: "g(3) = 2(3−1)² − 3 = 5",                         type: "angka", sel: "#g7-g3", val: 5 },
+      { poin: 25, desc: "h(1) = f(2·1) = 4",                              type: "angka", sel: "#g7-h1", val: 4 },
+      { poin: 25, desc: "Konsep: y = 2·f(x) membesar vertikal 2×",        type: "teks",  sel: "#g7-konsep", val: "Membesar vertikal 2×" },
+    ],
+  },
+  kuis: [
+    { q: "Grafik <code>y = f(x)</code> diberi <b>dilatasi vertikal</b> faktor <code>k</code> (pusat O); persamaannya…", opsi: ["y = k·f(x)", "y = f(k·x)", "y = f(x) + k", "y = f(x/k)"], kunci: 0 },
+    { q: "<code>f(x) = x²</code> mengalami <code>g(x) = 2x²</code>. Pada <code>x = 2</code>, nilai <code>g</code> adalah…", opsi: ["8", "4", "2", "16"], kunci: 0 },
+    { q: "<code>y = f(2x)</code> dibandingkan <code>y = f(x)</code>, grafiknya menjadi…", opsi: ["memampat (menyempit) 2× secara horizontal", "memuai (melebar) 2×", "terbalik", "tetap sama"], kunci: 0 },
+    { q: "Grafik <code>y = −x² + 4</code> mengalami urutan…", opsi: ["refleksi sumbu X, lalu translasi 4 ke atas", "translasi 4 ke atas, lalu refleksi sumbu X", "refleksi sumbu Y, lalu translasi 4 ke bawah", "dilatasi faktor 4"], kunci: 0 },
+    { q: "Transformasi <code>(x, y) → (2x, y)</code> pada grafik <code>y = f(x)</code> menghasilkan persamaan…", opsi: ["y = f(x/2)", "y = 2·f(x)", "y = f(2x)", "y = ½·f(x)"], kunci: 0 },
+    { q: "Dari <code>y = x²</code>, urutan <i>dilatasi vertikal k = 2</i> lalu <i>refleksi sumbu X</i> menghasilkan…", opsi: ["y = −2x²", "y = 2x²", "y = −x²/2", "y = x²/2"], kunci: 0 },
+  ],
+},
 ];
 
 /* =====================================================================
- * KUIS AKHIR — 20 soal (4 dari tiap modul), durasi 20 menit.
+ * KUIS AKHIR — 21 soal (3 dari tiap modul, termasuk modul transformasi
+ * fungsi), durasi 20 menit.
  * ===================================================================== */
 const KUIS_AKHIR = {
   id: "geo-final",
@@ -367,22 +516,23 @@ const KUIS_AKHIR = {
     { q: "Translasi — Bayangan <code>(−1, 4)</code> oleh <code>T = (5, −2)</code> adalah…", opsi: ["(4, 2)", "(−6, 6)", "(5, −2)", "(4, −2)"], kunci: 0 },
     { q: "Translasi — Jika <code>P(2, 3)</code> dipetakan ke <code>P'(8, 1)</code>, vektor T adalah…", opsi: ["(10, 4)", "(6, −2)", "(−6, 2)", "(−6, −2)"], kunci: 1 },
     { q: "Translasi — Bangun hasil translasi <b>tidak</b> mengalami perubahan dalam…", opsi: ["posisi", "ukuran & bentuk", "nama titik", "warna koordinat"], kunci: 1 },
-    { q: "Translasi — Titik <code>(0, 0)</code> digeser 3× dengan vektor <code>(1, −1)</code> berakhir di…", opsi: ["(3, −3)", "(1, −1)", "(−3, 3)", "(3, 1)"], kunci: 0 },
-    { q: "Refleksi — Bayangan <code>(−4, 7)</code> terhadap <b>sumbu X</b> adalah…", opsi: ["(7, −4)", "(4, 7)", "(−4, −7)", "(4, −7)"], kunci: 2 },
     { q: "Refleksi — Bayangan <code>(−4, 7)</code> terhadap <b>sumbu Y</b> adalah…", opsi: ["(−4, −7)", "(4, 7)", "(7, −4)", "(4, −7)"], kunci: 1 },
     { q: "Refleksi — Bayangan <code>(−4, 7)</code> terhadap garis <code>y = x</code> adalah…", opsi: ["(7, −4)", "(−7, 4)", "(−4, 7)", "(4, −7)"], kunci: 0 },
     { q: "Refleksi — <code>(x, y) → (y, x)</code> adalah refleksi terhadap garis…", opsi: ["y = −x", "sumbu X", "sumbu Y", "y = x"], kunci: 3 },
     { q: "Rotasi — <code>(2, −5)</code> diputar 90° pusat O menjadi…", opsi: ["(5, 2)", "(−5, −2)", "(−2, −5)", "(5, −2)"], kunci: 0 },
     { q: "Rotasi — <code>(2, −5)</code> diputar 180° pusat O menjadi…", opsi: ["(−2, 5)", "(5, 2)", "(−5, −2)", "(2, 5)"], kunci: 0 },
-    { q: "Rotasi — <code>R−90°</code> setara dengan…", opsi: ["R270°", "R180°", "R90°", "R45°"], kunci: 0 },
     { q: "Rotasi — Titik yang diputar 360° terhadap pusat mana pun akan…", opsi: ["berpindah 1 lingkaran", "kembali ke posisi semula", "jadi pantulan", "pindah ke pusat"], kunci: 1 },
     { q: "Dilatasi — Bayangan <code>(2, 3)</code> oleh <code>D[O, 4]</code> adalah…", opsi: ["(8, 12)", "(6, 7)", "(8, 3)", "(2, 12)"], kunci: 0 },
-    { q: "Dilatasi — Bayangan <code>(2, 3)</code> oleh <code>D[O, ½]</code> adalah…", opsi: ["(4, 6)", "(1, 1.5)", "(1, 3)", "(0.5, 0.75)"], kunci: 1 },
     { q: "Dilatasi — Jika panjang rusuk segitiga jadi <b>3×</b> semula, luasnya menjadi…", opsi: ["3×", "6×", "9×", "27×"], kunci: 2 },
     { q: "Dilatasi — <code>D[P, k]</code> dengan segala k, titik-titik yang TIDAK berpindah adalah…", opsi: ["semua titik di sumbu X", "titik pusat P", "titik di garis y=x", "titik asal O selalu"], kunci: 1 },
     { q: "Komposisi — <code>(T ∘ R)(P)</code> berarti transformasi yang dikerjakan DULU adalah…", opsi: ["T", "R", "keduanya sekaligus", "tergantung titik P"], kunci: 1 },
     { q: "Komposisi — <code>A(1, 3)</code>: R90° lalu T(2, −1) menghasilkan…", opsi: ["(−2, 3)", "(−1, 0)", "(3, 2)", "(0, −1)"], kunci: 1 },
     { q: "Komposisi — <code>D[O,3] ∘ D[O,2]</code> ekuivalen dengan…", opsi: ["D[O,5]", "D[O,6]", "D[O,1]", "D[O,9]"], kunci: 1 },
-    { q: "Komposisi — Manfaat komposisi transformasi dalam kehidupan (contoh nyata) adalah…", opsi: ["menambah berat file", "pola batik 2D & animasi film", "menghitung gaji", "mempercepat internet"], kunci: 1 },
+    { q: "Fungsi — Grafik <code>y = x²</code> oleh translasi <code>T = (2, 3)</code> menjadi…", opsi: ["y = (x − 2)² + 3", "y = (x + 2)² + 3", "y = (x − 2)² − 3", "y = (x + 3)² − 2"], kunci: 0 },
+    { q: "Fungsi — Grafik <code>y = f(x)</code> direfleksikan terhadap <b>sumbu X</b>; persamaannya…", opsi: ["y = f(−x)", "y = −f(x)", "y = f(x) − x", "y = −f(−x)"], kunci: 1 },
+    { q: "Fungsi — Jika <code>g(x) = (x − 1)² + 3</code> (dari <code>y = x²</code> oleh <code>T = (1, 3)</code>), nilai <code>g(2)</code> adalah…", opsi: ["4", "7", "8", "3"], kunci: 0 },
+    { q: "Fungsi — <code>y = x²</code> mengalami dilatasi <b>vertikal k = 2</b> (pusat O); persamaannya…", opsi: ["y = 2x²", "y = x²/2", "y = (2x)²", "y = 4x²"], kunci: 0 },
+    { q: "Fungsi — Puncak parabola <code>g(x) = 2(x − 1)² − 3</code> adalah…", opsi: ["(1, −3)", "(−1, −3)", "(1, 3)", "(−1, 3)"], kunci: 0 },
+    { q: "Fungsi — Grafik <code>y = f(2x)</code> dibandingkan <code>y = f(x)</code> menjadi…", opsi: ["memampat (menyempit) 2× secara horizontal", "memuai (melebar) 2×", "terbalik", "tetap sama"], kunci: 0 },
   ],
 };
