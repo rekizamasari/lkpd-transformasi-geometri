@@ -15,10 +15,11 @@ const FINAL_ID = KUIS_AKHIR.id;   // "geo-final" — id kuis akhir LKPD ini
   user = await requireLogin();
   if (!user) return;
   profil = await getProfile(user.id);
-  $("profil-nama").textContent = "👤 " + (profil?.nama || "Siswa");
+  const namaBersih = bersihNama(profil?.nama || "Siswa");
+  $("profil-nama").textContent = "👤 " + namaBersih;
   $("profil-kelas").textContent = "🏫 Kelas " + (profil?.kelas?.nama || "-");
   $("salam").innerHTML = `<div class="lec-panel" style="border-left:4px solid var(--aqua)">
-    <h4>Selamat datang, ${profil?.nama || "Siswa"}! 👋</h4>
+    <h4>Selamat datang, ${escapeHTML(namaBersih)}! 👋</h4>
     <p class="muted">Selesaikan ${MODUL.length} modul di bawah. Setiap modul berisi: <b>materi → contoh langkah → praktik isian koordinat (dinilai otomatis) → kuis</b>.
     Gunakan tombol <b>👁️ Lihat Visual</b> untuk melihat hasil transformasimu pada kanvas. Nilainya langsung masuk ke dashboard guru.</p></div>`;
   await muatProgres();
@@ -292,6 +293,17 @@ function tutupModal() {
 }
 
 function escapeHTML(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+/* Normalisasi nama: jika data tersimpan ter-URL-encode (mis. "Siti%20Amai")
+   → dekode ke spasi biasa agar sapaan siswa tetap rapi. */
+function bersihNama(s) {
+  let t = String(s ?? "").trim();
+  if (t.includes("%")) {
+    try { t = decodeURIComponent(t); } catch (e) { /* biarkan */ }
+    t = t.split("%20").join(" ");
+  }
+  return t;
+}
 
 function isiModul(m) {
   const tujuanHTML = m.tujuan.map(t => `<li>${t}</li>`).join("");

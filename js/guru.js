@@ -265,7 +265,7 @@ function tampilkan({ listSiswa, best, listSubs, listKuis }) {
   MODUL.forEach(m => head += `<th>⭐ Modul ${m.nomor}</th>`);
   head += `<th>🏁 Kuis Akhir</th><th>🔥 Rata Modul</th></tr></thead><tbody>`;
   const rows = aktif.map(s => {
-    let baris = `<tr><td>${escape(s.nama)}</td><td>${escape(s.nis || "-")}</td><td>${escape(s.kelas?.nama || "-")}</td>`;
+    let baris = `<tr><td>${escapeHTML(bersihNama(s.nama))}</td><td>${escapeHTML(s.nis || "-")}</td><td>${escapeHTML(s.kelas?.nama || "-")}</td>`;
     let angkanya = [];
     MODUL.forEach(m => {
       const b = (best[s.id] || {})[m.id] || {};
@@ -287,22 +287,33 @@ function tampilkan({ listSiswa, best, listSubs, listKuis }) {
   // ---- rincian praktik & kuis ----
   const subData = listSubs.filter(x => ids.has(x.student_id)).slice(0, 50);
   const kuiData = listKuis.filter(x => ids.has(x.student_id)).slice(0, 50);
-  const sNama = (id) => listSiswa.find(s => s.id === id)?.nama || "?";
+  const sNama = (id) => bersihNama(listSiswa.find(s => s.id === id)?.nama || "?");
 
   $g("tabel-subs").innerHTML = `<thead><tr><th>Waktu</th><th>Nama Siswa</th><th>Modul</th><th>Nilai (0-100)</th><th>Jawaban (potongan)</th></tr></thead><tbody>` +
-    subData.map(x => `<tr><td>${fmtWaktu(x.created_at)}</td><td>${escape(sNama(x.student_id))}</td><td>${labelModul(x.module_id)}</td>
+    subData.map(x => `<tr><td>${fmtWaktu(x.created_at)}</td><td>${escapeHTML(sNama(x.student_id))}</td><td>${labelModul(x.module_id)}</td>
       <td class="angka ${x.nilai >= 70 ? "v-hijau" : "v-merah"}">${x.nilai}</td>
-      <td><code class="kecil-code">${escape((x.output || "").slice(0, 60))}</code></td></tr>`).join("") +
+      <td><code class="kecil-code">${escapeHTML((x.output || "").slice(0, 60))}</code></td></tr>`).join("") +
     (subData.length ? "" : `<tr><td colspan="5" class="muted">Belum ada praktik dikirim</td></tr>`) + `</tbody>`;
 
   $g("tabel-kuis").innerHTML = `<thead><tr><th>Waktu</th><th>Nama Siswa</th><th>Modul</th><th>Jawaban benar</th><th>Nilai</th></tr></thead><tbody>` +
-    kuiData.map(x => `<tr><td>${fmtWaktu(x.created_at)}</td><td>${escape(sNama(x.student_id))}</td><td>${labelModul(x.module_id)}</td>
+    kuiData.map(x => `<tr><td>${fmtWaktu(x.created_at)}</td><td>${escapeHTML(sNama(x.student_id))}</td><td>${labelModul(x.module_id)}</td>
       <td class="angka">${x.benar} / ${x.total}</td>
       <td class="angka ${x.nilai >= 70 ? "v-hijau" : "v-merah"}">${x.nilai}</td></tr>`).join("") +
     (kuiData.length ? "" : `<tr><td colspan="5" class="muted">Belum ada kuis dikerjakan</td></tr>`) + `</tbody>`;
 }
 
 function escapeHTML(s) { return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+/* Normalisasi nama: jika data tersimpan ter-URL-encode (mis. "Siti%20Amai")
+   → dekode ke spasi biasa, agar tampilan & CSV tetap rapi. */
+function bersihNama(s) {
+  let t = String(s ?? "").trim();
+  if (t.includes("%")) {
+    try { t = decodeURIComponent(t); } catch (e) { /* biarkan */ }
+    t = t.split("%20").join(" ");
+  }
+  return t;
+}
 
 /* ---------- UNDUH CSV ---------- */
 function unduhCSV() {
@@ -313,7 +324,7 @@ function unduhCSV() {
   MODUL.forEach(m => csv += `;M${m.nomor} Praktik;M${m.nomor} Kuis;M${m.nomor} Akhir`);
   csv += ";Kuis Akhir\n";
   aktif.forEach(s => {
-    csv += `${s.nama};${s.nis || "-"};${s.kelas?.nama || "-"}`;
+    csv += `${bersihNama(s.nama)};${s.nis || "-"};${s.kelas?.nama || "-"}`;
     MODUL.forEach(m => {
       const b = (best[s.id] || {})[m.id] || {};
       const ada = (b.praktik !== undefined || b.kuis !== undefined);
