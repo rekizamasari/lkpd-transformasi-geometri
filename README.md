@@ -11,10 +11,10 @@ Repo mandiri — contoh penerapan dari template `PROMPT-TEMPLATE-LKPD.md` yang a
 | 3 🔄 | Rotasi — 90°/180°/270°, searah & berlawanan jarum jam |
 | 4 🔍 | Dilatasi — faktor k, luas ×k², sifat invarian pusat |
 | 5 🧩 | Komposisi transformasi — (T ∘ R), urutan penting, studi kasus batik & animasi |
-| 6 📈 | Transformasi Fungsi (Translasi & Refleksi) — y = f(x−a)+b, y = −f(x), y = f(−x) |
-| 7 🎚️ | Transformasi Fungsi (Dilatasi & Komposisi) — y = k·f(x), y = f(kx), y = a(x−b)²+c |
 
-Kuis terpadu: **21 soal acak (3 dari tiap modul), 20 menit** (`geo-final`), terbuka setelah semua modul tuntas.
+Setiap modul juga membahas **penerapan transformasi pada persamaan garis & kurva** (y = mx + c, y = x²): cara substitusi (x → x−a, y → y−b dll.), contoh langkah, dan praktik isian gradien/konstanta dengan kanvas yang menggambar garis asal + garis bayangan versi siswa.
+
+Kuis terpadu: **20 soal acak (4 dari tiap modul, termasuk 1 soal garis/kurva), 20 menit** (`geo-final`), terbuka setelah kelima modul tuntas.
 
 ## Setup (guru)
 
@@ -52,15 +52,18 @@ js/guru.js        analitik, CSV, realtime, materi & kunci
 ```js
 praktik: {
   deskripsi: "…",
-  inputs: `<div class="input-row">…<input id="m-a-x" type="number" />…</div>`, // HTML form
-  // Untuk materi "transformasi fungsi":
-  //   visual: { jenis:"fungsi", kurva:[{expr:"x*x",warna,label},…], titik:[…] }
-  //   expr dikembalikan lewat new Function("x", …) oleh painter js/siswa.js
-  visual: { jenis: "vektor|refleksi|rotasi|dilatasi|komposisi|fungsi", … },
+  inputs: `<div class="input-row">…<input id="m-a-x" type="number" />…</div>`,
+           // + baris isian garis: gradien m &amp; konstanta c
+  // Garis/kurva di kanvas (opsional, semua jenis visual mendukung):
+  //   visual.kurva    : [{ expr:"2*x+6", warna:"#f472b6", label:"y = 2x + 6 (asal)" }]
+  //   visual.kurvaBay : { m:"#m-gl-m", c:"#m-gl-c" }  → y = m·x + c dari isian siswa
+  visual: { jenis: "vektor|refleksi|rotasi|dilatasi|komposisi", … },
   checks: [
-    { poin: 25, desc: "…", type: "angka", sel: "#m-a-x", val: 5 },     // |isi−val| ≤ 0.01
-    { poin: 25, desc: "…", type: "teks",  sel: "#m-sel", val: "regex" } // regex (i)
+    { poin: 20, desc: "…", type: "angka", sel: "#m-a-x", val: 5 },      // |isi−val| ≤ 0.01
+    { poin: 20, desc: "…", type: "teks",  sel: "#m-sel", val: "regex" } // regex (i)
   ]
+  // total poin semua checks = 100
 }
 ```
-Painter `jenis:"fungsi"` menggambar kurva dasar + kurva hasil transformasi + legenda di kanvas −8..8; tambahkan bentuk visual lain dalam `renderVisual()` / painter `js/siswa.js` bila materi butuh tampilan baru. Kuis akhir: 3 soal per modul (awali teks soal dengan `<JudulModul> — `).
+
+Painter `js/siswa.js` menggambar `vis.kurva` (garis/kurva asal) pada semua jenis visual, plus `vis.kurvaBay` (garis bayangan y = m·x + c yang mengikuti isian siswa, untuk 📤 Kirim dinilai via `checks` angkanya). Untuk materi yang butuh tampilan baru, tambahkan painter di `renderVisual()` / `js/siswa.js`. Kuis akhir: 4 soal per modul (awali teks soal dengan `<JudulModul> — `).

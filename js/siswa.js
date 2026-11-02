@@ -430,8 +430,14 @@ function renderVisual(mid) {
   const vis = m.praktik && m.praktik.visual;
   const visBox = $("vis-" + mid + "-p");
   if (!vis || !visBox) return;
+  const legendaKurva = (vis.kurva || [])
+    .map(k => `<span style="color:${k.warna || "#22d3ee"};font-weight:600">— ${k.label || k.expr}</span>`)
+    .join(" &nbsp;·&nbsp; ") + (vis.kurvaBay
+      ? ` ${vis.kurva.length ? "·" : ""} <span style="color:${vis.kurvaBay.warna || "#22d3ee"};font-weight:600">— garis bayangan y = m·x + c (mengikuti isianmu)</span>`
+      : "");
   visBox.innerHTML = `<div class="chart-box"><h4>🗺️ Kanvas Koordinat — visualisasi transformasi</h4>
-    <canvas id="cv-${mid}" width="480" height="480" style="max-width:100%;width:480px;height:auto;border-radius:12px;background:#0b1220;border:1px solid var(--line)"></canvas></div>`;
+    <canvas id="cv-${mid}" width="480" height="480" style="max-width:100%;width:480px;height:auto;border-radius:12px;background:#0b1220;border:1px solid var(--line)"></canvas>
+    ${legendaKurva ? `<div style="font-size:12px;margin-top:6px">${legendaKurva}</div>` : ""}</div>`;
   const cv = document.getElementById("cv-" + mid);
   const ctx = cv.getContext("2d");
   gambarKanvas(ctx, vis, cv.width);
@@ -489,6 +495,9 @@ function gambarKanvas(ctx, vis, S) {
     ctx.stroke();
   }
 
+  // kurva dasar (opsional) — dipakai modul dengan materi persamaan garis/kurva
+  if (vis.kurva) gambarKurvaList(ctx, vis.kurva, px, py);
+
   switch (vis.jenis) {
     case "vektor": gambarVektor(ctx, vis, px, py, u); break;
     case "refleksi": gambarBayangan(ctx, vis, px, py); break;
@@ -496,6 +505,15 @@ function gambarKanvas(ctx, vis, S) {
     case "dilatasi": gambarBayangan(ctx, vis, px, py, true); break;
     case "komposisi": gambarKomposisi(ctx, vis, px, py); break;
     case "fungsi": gambarFungsi(ctx, vis, px, py, u); break;
+  }
+
+  // bayangan garis dari isian siswa: y = m·x + c (opsional, digambar teratas)
+  if (vis.kurvaBay) {
+    const baca = (s) => { const el = document.querySelector(s); return el ? parseFloat(el.value) : NaN; };
+    const m = baca(vis.kurvaBay.m), c = baca(vis.kurvaBay.c);
+    if (isFinite(m) && isFinite(c)) {
+      gambarKurvaList(ctx, [{ f: (x) => m * x + c, warna: vis.kurvaBay.warna || "#22d3ee", dash: [6, 4] }], px, py);
+    }
   }
 }
 
@@ -541,6 +559,29 @@ function garisPanahDashed(ctx, p1, p2, warna) {
   ctx.lineTo(p2[0] - 9 * Math.cos(ang - 0.4), p2[1] - 9 * Math.sin(ang - 0.4));
   ctx.lineTo(p2[0] - 9 * Math.cos(ang + 0.4), p2[1] - 9 * Math.sin(ang + 0.4));
   ctx.closePath(); ctx.fill();
+}
+
+/* --- overlay garis/kurva untuk semua jenis visual (vis.kurva / vis.kurvaBay) ---
+   item: { expr:"2*x+6", warna:"#f472b6", label:"…" }  atau  { f:(x)=>…, dash:[6,4] } */
+function gambarKurvaList(ctx, daftar, px, py, R = 8) {
+  daftar.forEach(k => {
+    try {
+      const f = k.f || new Function("x", "return (" + k.expr + ")");
+      ctx.save();
+      ctx.strokeStyle = k.warna || "#22d3ee";
+      ctx.lineWidth = 2.5;
+      if (k.dash) ctx.setLineDash(k.dash);
+      let baru = true;
+      for (let X = -R - 0.5; X <= R + 0.5; X += 0.05) {
+        const Y = f(X);
+        if (!isFinite(Y) || Y < -R - 1 || Y > R + 1) { baru = true; continue; }
+        if (baru) { ctx.beginPath(); ctx.moveTo(px(X), py(Y)); baru = false; }
+        else ctx.lineTo(px(X), py(Y));
+      }
+      ctx.stroke();
+      ctx.restore();
+    } catch (e) { /* ekspresi tidak valid → lewati kurva ini */ }
+  });
 }
 
 function gambarVektor(ctx, vis, px, py, u) {
